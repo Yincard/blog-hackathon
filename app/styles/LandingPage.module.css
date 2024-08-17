@@ -1,0 +1,98 @@
+/* Container styles */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: url('https://cdn.discordapp.com/attachments/975148879056097391/1274478378917040320/ANMNKYdZXaxfAAAAAElFTkSuQmCC.png?ex=66c265fc&is=66c1147c&hm=3fe74e3851ac8e8c724b67c7b4a69da8b958c23a0a6ac5311b716514055350c0&g') no-repeat center center fixed;
+    background-size: cover;
+    text-align: center;
+    padding: 0 2rem;
+    color: #fff;
+  }
+  
+  /* Title styles */
+  .title {
+    font-size: 4rem;
+    font-weight: normal; /* Normal weight for "Welcome to" */
+    color: #ffffff;
+    margin-bottom: 1rem;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  /* Slogan styles */
+.slogan {
+    color: #B0B0B0;
+    font-size: 1.2rem; /* Slightly larger text for emphasis */
+    font-style: italic;
+    margin-bottom: 2rem; /* Space between slogan and button */
+    margin-left: -2.7rem;
+  }
+  
+  /* Blogify styles */
+  .blogify {
+    font-size: 5rem; /* Larger font size for emphasis */
+    font-weight: 700; /* Bolder text */
+    color: #ff6b6b; /* Main text color */
+    display: inline-block;
+    position: relative;
+    line-height: 1.2;
+    margin-left: -1.5rem;
+  }
+  
+  .blogify::after {
+    content: "";
+    position: absolute;
+    bottom: -10px; /* Slightly below the text */
+    left: 0;
+    width: 100%;
+    height: 4px; /* Underline height */
+    background: linear-gradient(90deg, rgba(255, 107, 107, 0.6), rgba(255, 107, 107, 0));
+    border-radius: 2px;
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+  
+  .blogify:hover::after {
+    transform: scaleX(1);
+  }
+  
+  /* Button styles */
+  .btn {
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    margin-bottom: 7.5rem; /* Adjust this value to move the button up */
+    margin-left: -1.5rem;
+    border-radius: 1.75rem;
+    padding: 1rem 5rem;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-family: 'Roboto', sans-serif;
+    text-transform: uppercase;
+  }
+  
+  .btn:hover {
+    background-color: #ff4757;
+    transform: translateY(-3px);
+  }
+  
+  .btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.5);
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .title {
+      font-size: 3rem;
+    }
+  
+    .btn {
+      font-size: 1rem;
+      padding: 0.75rem 1.5rem;
+    }
+  }

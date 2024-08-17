@@ -1,0 +1,43 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #141414;
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Prevent scrolling */
+  background: url('https://img.freepik.com/free-vector/wave-background-minimalist-color-gradient_483537-3382.jpg?t=st=1723929565~exp=1723933165~hmac=526d5924bc34699a08d98d28053b3f7955459d29ec5ff12357a12e4fbd33c539&w=1380'); /* Add a subtle texture image */
+  background-size: cover; /* Make sure the image covers the entire background */
+}
+
+h1, h2 {
+  color: #ffffff;
+}
+
+input {
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #1DA1F2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0d8cd2;
+}
+
+a {
+  color: #1DA1F2;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
