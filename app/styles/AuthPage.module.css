@@ -1,5 +1,3 @@
-
-
 /* Container for the authentication pages */
 .authContainer {
     display: flex;
@@ -7,10 +5,13 @@
     align-items: center;
     height: 100vh;
     padding: 2rem;
-    background: linear-gradient(135deg, #1e1e1e, #2d2d2d); /* Gradient from deep gray to slightly lighter gray */
-    overflow: hidden; 
-    position: relative; /* Position relative to add overlay */
-    color: #fff; /* White text for contrast */
+    background: linear-gradient(135deg, #1e1e1e, #2d2d2d);
+    /* Gradient from deep gray to slightly lighter gray */
+    overflow: hidden;
+    position: relative;
+    /* Position relative to add overlay */
+    color: #fff;
+    /* White text for contrast */
 }
 
 /* Adding a subtle texture overlay for a modern touch */
@@ -21,18 +22,24 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: url('https://img.freepik.com/free-vector/background-gradient-minimalist-design-style_483537-2763.jpg?t=st=1723929249~exp=1723932849~hmac=7cd4c1a6df1ae65f7ac9097499cc6bbb91d60921786f6ff19702b6bd19907cc9&w=1380'); /* Add a subtle texture image */
-    background-size: cover; /* Make sure the image covers the entire background */
-    opacity: 0.1; /* Adjust the opacity of the texture */
-    pointer-events: none; /* Make sure it doesn’t interfere with clicks */
+    background: url('https://img.freepik.com/free-vector/background-gradient-minimalist-design-style_483537-2763.jpg?t=st=1723929249~exp=1723932849~hmac=7cd4c1a6df1ae65f7ac9097499cc6bbb91d60921786f6ff19702b6bd19907cc9&w=1380');
+    /* Add a subtle texture image */
+    background-size: cover;
+    /* Make sure the image covers the entire background */
+    opacity: 0.1;
+    /* Adjust the opacity of the texture */
+    pointer-events: none;
+    /* Make sure it doesn’t interfere with clicks */
 }
 
 /* Container for the sign-up form and profile picture */
 .signupFormContainer {
     display: flex;
+    transform: scale(0.95);
     flex-direction: column;
     align-items: center;
-    background: rgba(0, 0, 0, 0.8); /* Darker background with slight transparency */
+    background: rgba(0, 0, 0, 0.8);
+    /* Darker background with slight transparency */
     border-radius: 0.75rem;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     padding: 2rem;
@@ -40,10 +47,11 @@
     max-width: 500px;
     position: relative;
 }
-  
+
 /* Profile picture container and styling */
 .pfpContainer {
-    position: relative; /* Ensure the container is positioned relative */
+    position: relative;
+    /* Ensure the container is positioned relative */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -52,10 +60,12 @@
 
 .pfpImage {
     border-radius: 50%;
-    border: 3px solid #444; /* Darker border color for better contrast */
+    border: 3px solid #444;
+    /* Darker border color for better contrast */
     width: 128px;
     height: 128px;
-    object-fit: cover; /* Ensure the image fits within the circle */
+    object-fit: cover;
+    /* Ensure the image fits within the circle */
 }
 
 .pfpOverlay {
@@ -69,12 +79,15 @@
     align-items: center;
     background-color: rgba(0, 0, 0, 0.5);
     border-radius: 50%;
-    opacity: 0; /* Hidden by default */
-    transition: opacity 0.3s ease; /* Smooth transition */
+    opacity: 0;
+    /* Hidden by default */
+    transition: opacity 0.3s ease;
+    /* Smooth transition */
 }
 
 .pfpContainer:hover .pfpOverlay {
-    opacity: 1; /* Show the overlay on hover */
+    opacity: 1;
+    /* Show the overlay on hover */
 }
 
 .cameraIcon {
@@ -87,15 +100,19 @@
 .title {
     font-size: 2rem;
     font-weight: bold;
-    color: #e0e0e0; /* Lighter text color for better readability */
+    color: #e0e0e0;
+    /* Lighter text color for better readability */
     margin-bottom: 1rem;
     font-family: 'Roboto', sans-serif;
 }
 
 .subtitle {
     font-size: 1rem;
-    color: #b0b0b0; /* Subtle gray for secondary text */
+    color: #b0b0b0;
+    /* Subtle gray for secondary text */
     margin-bottom: 1.5rem;
+    margin-top: -0.75rem;
+    margin-left: 0.75rem;
     text-align: center;
     font-family: 'Roboto', sans-serif;
 }
@@ -111,11 +128,14 @@
     max-width: 400px;
     padding: 0.75rem;
     margin-bottom: 1rem;
-    border: 1px solid #444; /* Darker border color */
+    border: 1px solid #444;
+    /* Darker border color */
     border-radius: 0.5rem;
     font-size: 1rem;
-    background-color: #333; /* Dark background for input fields */
-    color: #fff; /* White text for input fields */
+    background-color: #333;
+    /* Dark background for input fields */
+    color: #fff;
+    /* White text for input fields */
     margin-left: 1.75rem;
 }
 
@@ -131,8 +151,9 @@
     transition: background-color 0.3s ease, transform 0.3s ease;
     font-family: 'Roboto', sans-serif;
     text-transform: uppercase;
-    margin-top: 1rem; /* Centering button */
-    margin-left: 11rem;
+    margin-top: 0.5rem;
+    /* Centering button */
+    margin-left: 12rem;
 }
 
 .btn:hover {
@@ -145,11 +166,19 @@
     box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.5);
 }
 
+.btn:disabled {
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+}
+
 /* Login link */
 .loginLink {
     margin-top: 1rem;
-    color: #e0e0e0; /* Match with title text color */
-    text-align: center; /* Centering the link */
+    color: #e0e0e0;
+    /* Match with title text color */
+    text-align: center;
+    /* Centering the link */
 }
 
 .loginLink a {
@@ -163,7 +192,8 @@
 
 /* File input styling */
 .pfpInput {
-    display: none; /* Hide file input */
+    display: none;
+    /* Hide file input */
 }
 
 /* Container for input field and validation icon */
@@ -173,7 +203,8 @@
 }
 
 .input {
-    padding-right: 2.5rem; /* Ensure there is space for the icons */
+    padding-right: 2.5rem;
+    /* Ensure there is space for the icons */
 }
 
 .validIcon {
@@ -181,43 +212,84 @@
     right: -10px;
     top: 40%;
     transform: translateY(-50%);
-    color: green; /* Color of the checkmark icon */
+    color: green;
+    /* Color of the checkmark icon */
 }
+
+.invalidIcon {
+    position: absolute;
+    right: -10px;
+    top: 40%;
+    transform: translateY(-50%);
+    color: rgb(255, 37, 8);
+    /* Color of the checkmark icon */
+}
+
 
 .eyeIcon {
     position: absolute;
     right: 30px;
-    top: 50%;
+    top: 35%;
     transform: translateY(-50%);
     cursor: pointer;
-    color: #bbb; /* Color of the eye icon */
+    color: #bbb;
+    /* Color of the eye icon */
 }
 
 /* Styles for valid input fields */
 .validInput {
-    border-color: green; /* Border color for valid input */
-    color: green; /* Color of the text to indicate validity */
+    border-color: green;
+    /* Border color for valid input */
+    color: green;
+    /* Color of the text to indicate validity */
 }
 
+
 .error {
-    color: #ff6b6b; /* Red color for error messages */
+    color: #ff6b6b;
+    /* Red color for error messages */
     margin-bottom: 1rem;
     margin-left: 2rem;
-    font-size: 0.875rem; /* Slightly smaller font size for error messages */
-  }
+    font-size: 0.875rem;
+    /* Slightly smaller font size for error messages */
+}
 
 /* Add a specific class for password inputs */
 .passwordInput {
     position: relative;
-  }
-  
-  /* Hide default eye icon in WebKit browsers */
-  .passwordInput::-webkit-inner-spin-button,
-  .passwordInput::-webkit-calendar-picker-indicator {
+}
+
+/* Hide default eye icon in WebKit browsers */
+.passwordInput::-webkit-inner-spin-button,
+.passwordInput::-webkit-calendar-picker-indicator {
     display: none;
-  }
-  
-  /* Hide default eye icon in Internet Explorer */
-  .passwordInput::-ms-reveal {
+    -webkit-appearance: none;
+}
+
+.confirmPassword::-webkit-inner-spin-button,
+.confirmPassword::-webkit-calendar-picker-indicator {
     display: none;
-  }
+    -webkit-appearance: none;
+}
+
+.spinner {
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-left: 2px solid #ffffff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 0.6s linear infinite;
+    margin-left: -5px;
+    margin-bottom: 60px;
+    margin-top: -45px
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

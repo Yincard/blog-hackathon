@@ -6,8 +6,10 @@ import { auth, firestore, storage } from '../../../firebase';
 import { collection, query, where, getDocs, setDoc, doc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import styles from '../../styles/AuthPage.module.css';
+import LoadingSpinner from './Components/LoadingSpinner';
+
 import Image from 'next/image';
-import { FaCamera, FaEye, FaEyeSlash, FaCheck } from 'react-icons/fa';
+import { FaCamera, FaEye, FaEyeSlash, FaCheck, FaTimes } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 
 export default function Signup() {
@@ -23,25 +25,22 @@ export default function Signup() {
     password: false,
     confirmPassword: false,
   });
+  const [touchedFields, setTouchedFields] = useState({
+    username: false,
+    email: false,
+    password: false,
+    confirmPassword: false,
+  });
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [usernameAvailable, setUsernameAvailable] = useState(null);
+
   const router = useRouter();
 
-  useEffect(() => {
-    validateField('username', username);
-  }, [username]);
-
-  useEffect(() => {
-    validateField('email', email);
-  }, [email]);
-
-  useEffect(() => {
-    validateField('password', password);
-  }, [password]);
-
-  useEffect(() => {
-    validateField('confirmPassword', confirmPassword);
-  }, [confirmPassword, password]);
+  const normalizeUsername = (username) => username.toLowerCase().trim();
 
   const validateField = (field, value) => {
     let error = null;
@@ -49,14 +48,20 @@ export default function Signup() {
 
     switch (field) {
       case 'username':
-        if (!value) {
+        const normalizedUsername = normalizeUsername(value);
+        if (!value || !value.length) {
           error = 'Username is required';
+        } else if (value.length > 32) {
+          error = 'Username cannot exceed 32 characters';
         } else if (!/^[a-zA-Z0-9]{1,32}$/.test(value)) {
           error = 'Username must be alphanumeric and between 1 and 32 characters long';
+        } else if (usernameAvailable === false) {
+          error = 'Username is already taken';
         } else {
           isValid = true;
         }
         break;
+
       case 'email':
         if (!value) {
           error = 'Email is required';
@@ -96,12 +101,27 @@ export default function Signup() {
     setValidFields(prev => ({ ...prev, [field]: isValid }));
   };
 
+  const handleBlur = (field) => {
+    setTouchedFields(prev => ({ ...prev, [field]: true }));
+    validateField(field, field === 'username' ? username : field === 'email' ? email : field === 'password' ? password : confirmPassword);
+  };
+
   const handleSignup = async (e) => {
     e.preventDefault();
+
+    if (Object.values(touchedFields).some(field => !field)) {
+      Object.keys(validFields).forEach(field => {
+        validateField(field, field === 'username' ? username : field === 'email' ? email : field === 'password' ? password : confirmPassword);
+        setTouchedFields(prev => ({ ...prev, [field]: true }));
+      });
+    }
+
     if (Object.values(validFields).every(field => field)) {
+      setIsLoading(true);
       try {
+        const normalizedUsername = normalizeUsername(username);
         const usersRef = collection(firestore, 'users');
-        const q = query(usersRef, where('username', '==', username));
+        const q = query(usersRef, where('username', '==', normalizedUsername));
         const querySnapshot = await getDocs(q);
 
         if (!querySnapshot.empty) {
@@ -114,7 +134,6 @@ export default function Signup() {
 
         // Default profile picture URL
         let photoURL = 'https://cdn.discordapp.com/attachments/975148879056097391/1274493730811936869/default-avatar-icon-of-social-media-user-vector.jpg?ex=66c27448&is=66c122c8&hm=52c12b26b51b3b14d03d6ab4d3f189afcfaa79448d91be2f8b65593a6582039f&';
-
         if (profilePic) {
           // Upload profile picture
           const photoRef = ref(storage, `profile-pics/${user.uid}/${profilePic.name}`);
@@ -128,7 +147,7 @@ export default function Signup() {
         });
 
         await setDoc(doc(firestore, 'users', user.uid), {
-          username,
+          username: normalizedUsername,
           email,
           photoURL,
         });
@@ -139,23 +158,82 @@ export default function Signup() {
           email: user.email,
         });
 
-        router.push('/');
+        router.push('/blogify/page');
       } catch (error) {
-        setErrors(prev => ({ ...prev, general: 'Signup failed: ' + error.message }));
+        if (error.code === 'auth/email-already-in-use') {
+          setErrors(prev => ({ ...prev, general: 'Signup failed! ' + 'This email already exists.' }));
+        } else {
+          setErrors(prev => ({ ...prev, general: 'Signup failed: ' + error.message }));
+        }
+      } finally {
+        setIsLoading(false);
       }
+    } else if (usernameAvailable === false && usernameAvailable !== null) {
+      setErrors(prev => ({ ...prev, username: 'Username is already taken' }));
     }
   };
+
   const handleFileClick = () => {
     document.getElementById('profile-pic').click();
   };
 
-  const handleInputChange = (e, setter) => {
+  const handleInputChange = (e, setter, field) => {
     const noSpaceValue = e.target.value.replace(/\s/g, '');
     setter(noSpaceValue);
+    validateField(field, noSpaceValue); // Validate the specific field
   };
+
+  const debounce = (func, delay) => {
+    let timeoutId;
+    return (...args) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => func(...args), delay);
+    };
+  };
+
+  const checkUsernameAvailability = async (username) => {
+    if (username.length < 1) {
+      setUsernameAvailable(null);
+      return;
+    }
+
+    const normalizedUsername = normalizeUsername(username);
+    const usersRef = collection(firestore, 'users');
+    const q = query(usersRef, where('username', '==', normalizedUsername));
+    const querySnapshot = await getDocs(q);
+
+    setUsernameAvailable(querySnapshot.empty);
+  };
+
+  const debouncedCheckUsername = debounce(async (username) => {
+    await checkUsernameAvailability(username);
+    validateField('username', username);
+  }, 300);
+
+  const handleUsernameChange = (e) => {
+    const noSpaceValue = e.target.value.replace(/\s/g, '');
+    setUsername(noSpaceValue);
+    setUsernameAvailable(null); // Reset availability while checking
+    debouncedCheckUsername(noSpaceValue);
+    validateField('username', noSpaceValue); // Validate username as it changes
+  };
+
+  const handleEmailChange = (e) => {
+    handleInputChange(e, setEmail, 'email'); // Validate email as it changes
+  };
+
+  const handlePasswordChange = (e) => {
+    handleInputChange(e, setPassword, 'password'); // Validate password as it changes
+  };
+
+  const handleConfirmPasswordChange = (e) => {
+    handleInputChange(e, setConfirmPassword, 'confirmPassword'); // Validate confirmPassword as it changes
+  };
+
 
   return (
     <div className={styles.authContainer}>
+      {isLoading && <LoadingSpinner />}
       <div className={styles.signupFormContainer}>
         <div className={styles.pfpContainer}>
           <div className={styles.pfp} onClick={handleFileClick}>
@@ -178,8 +256,8 @@ export default function Signup() {
             className={styles.pfpInput}
           />
         </div>
-        <h2 className={styles.title}>Sign Up</h2>
-        <p className={styles.subtitle}>Create an account to blog today!</p>
+        <h2 className={styles.title}>Blogify</h2>
+        <p className={styles.subtitle}>Join and see what others are up to!</p>
         {errors.general && <div className={styles.error}>{errors.general}</div>}
         <form onSubmit={handleSignup} className={styles.form}>
           <div className={styles.inputContainer}>
@@ -187,21 +265,36 @@ export default function Signup() {
               type="text"
               placeholder="Username"
               value={username}
-              onChange={(e) => handleInputChange(e, setUsername)}
+              onChange={handleUsernameChange}
+              onBlur={() => handleBlur('username')}
               className={`${styles.input} ${validFields.username ? styles.validInput : ''}`}
+              maxLength="32"
             />
-            {validFields.username && <FaCheck className={styles.validIcon} />}
-            {errors.username && <div className={styles.error}>{errors.username}</div>}
+
+            {username.length > 0 && (
+              (usernameAvailable === true && !errors.username) ? (
+                <FaCheck className={styles.validIcon} style={{ color: 'green' }} />
+              ) : (usernameAvailable === false || (errors.username)) ? (
+                <FaTimes className={styles.invalidIcon} style={{ color: 'red' }} />
+              ) : (
+                <div className={styles.spinner}></div>
+              )
+            )}
+            {touchedFields.username && errors.username && <div className={styles.error}>{errors.username}</div>}
+
           </div>
           <div className={styles.inputContainer}>
+            <label htmlFor="email"></label>
             <input
+              id="email"
               type="email"
               placeholder="Enter Email"
               value={email}
-              onChange={(e) => handleInputChange(e, setEmail)}
-              className={`${styles.input} ${validFields.email ? styles.validInput : ''}`}
+              onChange={handleEmailChange}
+              onBlur={() => handleBlur('email')}
+              className={`${styles.input} ${validFields.email && !errors.email ? styles.validInput : ''}`}
             />
-            {validFields.email && <FaCheck className={styles.validIcon} />}
+            {validFields.email && !errors.email && <FaCheck className={styles.validIcon} style={{ color: 'green' }} />}
             {errors.email && <div className={styles.error}>{errors.email}</div>}
           </div>
           <div className={styles.inputContainer}>
@@ -209,35 +302,37 @@ export default function Signup() {
               type={showPassword ? 'text' : 'password'}
               placeholder="Enter Password"
               value={password}
-              onChange={(e) => handleInputChange(e, setPassword)}
+              onChange={handlePasswordChange}
+              onBlur={() => handleBlur('password')}
               className={`${styles.input} ${validFields.password ? styles.passwordInput : ''}`}
             />
             <div className={styles.eyeIcon} onClick={() => setShowPassword(!showPassword)}>
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </div>
             {validFields.password && <FaCheck className={styles.validIcon} />}
-            {errors.password && <div className={styles.error}>{errors.password}</div>}
+            {touchedFields.password && errors.password && <div className={styles.error}>{errors.password}</div>}
           </div>
           <div className={styles.inputContainer}>
             <input
               type={showConfirmPassword ? 'text' : 'password'}
               placeholder="Confirm Password"
               value={confirmPassword}
-              onChange={(e) => handleInputChange(e, setConfirmPassword)}
+              onChange={handleConfirmPasswordChange}
+              onBlur={() => handleBlur('confirmPassword')}
               className={`${styles.input} ${validFields.confirmPassword ? styles.passwordInput : ''}`}
             />
             <div className={styles.eyeIcon} onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
               {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
             </div>
             {validFields.confirmPassword && <FaCheck className={styles.validIcon} />}
-            {errors.confirmPassword && <div className={styles.error}>{errors.confirmPassword}</div>}
+            {touchedFields.confirmPassword && errors.confirmPassword && <div className={styles.error}>{errors.confirmPassword}</div>}
           </div>
-          <button type="submit" className={styles.btn}>
-            Sign Up
+          <button type="submit" className={styles.btn} disabled={isLoading}>
+            {isLoading ? 'Signing Up...' : 'Sign Up'}
           </button>
         </form>
         <div className={styles.loginLink}>
-          <p>Already have an account? <a href="./auth/Login">Sign in</a></p>
+          <p>Already have an account? <a href="/auth/Login">Sign in</a></p>
         </div>
       </div>
     </div>

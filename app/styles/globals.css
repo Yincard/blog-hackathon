@@ -5,8 +5,6 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden; /* Prevent scrolling */
-  background: url('https://img.freepik.com/free-vector/wave-background-minimalist-color-gradient_483537-3382.jpg?t=st=1723929565~exp=1723933165~hmac=526d5924bc34699a08d98d28053b3f7955459d29ec5ff12357a12e4fbd33c539&w=1380'); /* Add a subtle texture image */
-  background-size: cover; /* Make sure the image covers the entire background */
 }
 
 h1, h2 {
@@ -40,4 +38,26 @@ a {
 
 a:hover {
   text-decoration: underline;
+}
+
+/* Hide spinner buttons for number inputs in all browsers */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Hide calendar picker for date inputs in WebKit browsers */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+/* Hide spinner buttons for Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* Hide inner spin button for other browsers */
+input[type="number"] {
+    appearance: none;
 }
