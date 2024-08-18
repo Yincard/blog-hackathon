@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Blogify
+
+Blogify is a modern blogging platform that allows users to create, share, and manage their blog content effortlessly. With a sleek and intuitive design, Blogify leverages React.js, Next.js, Firebase, and MySQL to deliver a seamless user experience for content creation and management.
+
+## Project Overview
+
+Blogify is a web application where users can:
+- **Post Blogs**: Create and share blog posts with text and images.
+- **Search and Filter**: Easily find and view posts based on usernames.
+- **Manage Profiles**: Update user profiles and profile pictures.
+- **Secure Authentication**: Log in and sign up with Firebase Authentication.
+
+## Features
+
+- **Blog Creation**: Users can write and post blogs, including uploading images.
+- **User Authentication**: Secure login and user management via Firebase Authentication.
+- **Search Functionality**: Filter and search for posts by username.
+- **Profile Management**: Edit and update user profiles.
+- **Responsive Design**: Mobile-friendly and accessible design.
+
+## Tech Stack
+
+- **Front-end**: React.js, Next.js, CSS Modules
+- **Back-end**: Node.js, Firebase (for authentication and storage)
+- **Database**: MySQL, Prisma ORM
+- **Deployment**: Vercel (for front-end deployment)
 
 ## Getting Started
 
-First, run the development server:
+To set up a local environment for Blogify, follow these instructions:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Prerequisites
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Node.js (v18 or later)
+- MySQL
+- Firebase project setup
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### Installation
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+1. **Clone the Repository:**
+    ```bash
+    git clone https://github.com/Yincard/blog-hackathon.git
+    cd blog-hackathon
+    ```
 
-## Learn More
+2. **Install Dependencies:**
+    ```bash
+    npm install
+    ```
 
-To learn more about Next.js, take a look at the following resources:
+3. **Configure Firebase:**
+   - Create a Firebase project and configure it.
+   - Add your Firebase configuration to the `firebase.js` file located in the `src` directory.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. **Set Up Environment Variables:**
+   Create a `.env.local` file in the root directory with your Firebase and MySQL environment variables:
+    ```
+    NEXT_PUBLIC_FIREBASE_API_KEY=your-api-key
+    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-auth-domain
+    NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
+    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-storage-bucket
+    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your-sender-id
+    NEXT_PUBLIC_FIREBASE_APP_ID=your-app-id
+    NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your-measurement-id
+    DATABASE_URL=your-database-url
+    ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+5. **Set Up MySQL Database:**
+   - Create a MySQL database and update the Prisma schema in `prisma/schema.prisma`.
+   - Apply Prisma migrations:
+     ```bash
+     npx prisma migrate dev
+     ```
 
-## Deploy on Vercel
+6. **Run the Development Server:**
+    ```bash
+    npm run dev
+    ```
+   - Visit [http://localhost:3000](http://localhost:3000) in your browser.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Usage
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- **Creating Posts**: Click the "Post" button to add new blog content.
+- **Searching Posts**: Use the search bar to filter posts by username.
+- **Managing Profiles**: Update your profile through the sidebar.
