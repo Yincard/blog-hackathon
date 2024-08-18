@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile, onAuthStateChanged } from 'firebase/auth';
 import { auth, firestore, storage } from '../../../firebase';
 import { collection, query, where, getDocs, setDoc, doc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
@@ -40,7 +40,16 @@ export default function Signup() {
 
   const router = useRouter();
 
-  const normalizeUsername = (username) => username.toLowerCase().trim();
+  // Check if the user is already logged in
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        router.push('/blogify/home');
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup subscription on unmount
+  }, [router]);
 
   const validateField = (field, value) => {
     let error = null;
@@ -48,7 +57,6 @@ export default function Signup() {
 
     switch (field) {
       case 'username':
-        const normalizedUsername = normalizeUsername(value);
         if (!value || !value.length) {
           error = 'Username is required';
         } else if (value.length > 32) {
@@ -97,35 +105,35 @@ export default function Signup() {
         break;
     }
 
-    setErrors(prev => ({ ...prev, [field]: error }));
-    setValidFields(prev => ({ ...prev, [field]: isValid }));
+    setErrors((prev) => ({ ...prev, [field]: error }));
+    setValidFields((prev) => ({ ...prev, [field]: isValid }));
   };
 
   const handleBlur = (field) => {
-    setTouchedFields(prev => ({ ...prev, [field]: true }));
+    setTouchedFields((prev) => ({ ...prev, [field]: true }));
     validateField(field, field === 'username' ? username : field === 'email' ? email : field === 'password' ? password : confirmPassword);
   };
 
   const handleSignup = async (e) => {
     e.preventDefault();
 
-    if (Object.values(touchedFields).some(field => !field)) {
-      Object.keys(validFields).forEach(field => {
+    // Validate all fields if touched
+    if (Object.values(touchedFields).some((field) => !field)) {
+      Object.keys(validFields).forEach((field) => {
         validateField(field, field === 'username' ? username : field === 'email' ? email : field === 'password' ? password : confirmPassword);
-        setTouchedFields(prev => ({ ...prev, [field]: true }));
+        setTouchedFields((prev) => ({ ...prev, [field]: true }));
       });
     }
 
-    if (Object.values(validFields).every(field => field)) {
+    if (Object.values(validFields).every((field) => field)) {
       setIsLoading(true);
       try {
-        const normalizedUsername = normalizeUsername(username);
         const usersRef = collection(firestore, 'users');
-        const q = query(usersRef, where('username', '==', normalizedUsername));
+        const q = query(usersRef, where('username', '==', username));
         const querySnapshot = await getDocs(q);
 
         if (!querySnapshot.empty) {
-          setErrors(prev => ({ ...prev, username: 'Username is already taken' }));
+          setErrors((prev) => ({ ...prev, username: 'Username is already taken' }));
           return;
         }
 
@@ -147,29 +155,26 @@ export default function Signup() {
         });
 
         await setDoc(doc(firestore, 'users', user.uid), {
-          username: normalizedUsername,
+          username,
           email,
           photoURL,
         });
 
         console.log('Updated Profile:', {
           displayName: user.displayName,
+          userId: user.uuid,
           photoURL: user.photoURL,
           email: user.email,
         });
 
-        router.push('/blogify/page');
+        router.push('/blogify/home');
       } catch (error) {
-        if (error.code === 'auth/email-already-in-use') {
-          setErrors(prev => ({ ...prev, general: 'Signup failed! ' + 'This email already exists.' }));
-        } else {
-          setErrors(prev => ({ ...prev, general: 'Signup failed: ' + error.message }));
-        }
+        setErrors((prev) => ({ ...prev, general: 'Signup failed: ' + error.message }));
       } finally {
         setIsLoading(false);
       }
     } else if (usernameAvailable === false && usernameAvailable !== null) {
-      setErrors(prev => ({ ...prev, username: 'Username is already taken' }));
+      setErrors((prev) => ({ ...prev, username: 'Username is already taken' }));
     }
   };
 
@@ -197,9 +202,8 @@ export default function Signup() {
       return;
     }
 
-    const normalizedUsername = normalizeUsername(username);
     const usersRef = collection(firestore, 'users');
-    const q = query(usersRef, where('username', '==', normalizedUsername));
+    const q = query(usersRef, where('username', '==', username));
     const querySnapshot = await getDocs(q);
 
     setUsernameAvailable(querySnapshot.empty);
@@ -227,9 +231,8 @@ export default function Signup() {
   };
 
   const handleConfirmPasswordChange = (e) => {
-    handleInputChange(e, setConfirmPassword, 'confirmPassword'); // Validate confirmPassword as it changes
+    handleInputChange(e, setConfirmPassword, 'confirmPassword'); // Validate confirm password as it changes
   };
-
 
   return (
     <div className={styles.authContainer}>
@@ -256,8 +259,8 @@ export default function Signup() {
             className={styles.pfpInput}
           />
         </div>
-        <h2 className={styles.title}>Blogify</h2>
-        <p className={styles.subtitle}>Join and see what others are up to!</p>
+        <h2 className={styles.title}>Sign Up</h2>
+        <p className={styles.subtitle}>Create an account to blog today!</p>
         {errors.general && <div className={styles.error}>{errors.general}</div>}
         <form onSubmit={handleSignup} className={styles.form}>
           <div className={styles.inputContainer}>
@@ -268,9 +271,9 @@ export default function Signup() {
               onChange={handleUsernameChange}
               onBlur={() => handleBlur('username')}
               className={`${styles.input} ${validFields.username ? styles.validInput : ''}`}
-              maxLength="32"
+              maxLength="32" 
             />
-
+            
             {username.length > 0 && (
               (usernameAvailable === true && !errors.username) ? (
                 <FaCheck className={styles.validIcon} style={{ color: 'green' }} />
@@ -280,22 +283,21 @@ export default function Signup() {
                 <div className={styles.spinner}></div>
               )
             )}
-            {touchedFields.username && errors.username && <div className={styles.error}>{errors.username}</div>}
-
+          
+          {touchedFields.username && errors.username && <div className={styles.error}>{errors.username}</div>}
+          
           </div>
           <div className={styles.inputContainer}>
-            <label htmlFor="email"></label>
             <input
-              id="email"
               type="email"
               placeholder="Enter Email"
               value={email}
               onChange={handleEmailChange}
               onBlur={() => handleBlur('email')}
-              className={`${styles.input} ${validFields.email && !errors.email ? styles.validInput : ''}`}
+              className={`${styles.input} ${validFields.email ? styles.validInput : ''}`}
             />
-            {validFields.email && !errors.email && <FaCheck className={styles.validIcon} style={{ color: 'green' }} />}
-            {errors.email && <div className={styles.error}>{errors.email}</div>}
+            {validFields.email && <FaCheck className={styles.validIcon} />}
+            {touchedFields.email && errors.email && <div className={styles.error}>{errors.email}</div>}
           </div>
           <div className={styles.inputContainer}>
             <input

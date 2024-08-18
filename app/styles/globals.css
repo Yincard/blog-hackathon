@@ -3,7 +3,7 @@ body {
   background-color: #000000;
   margin: 0;
   padding: 0;
-  overflow: hidden; /* Prevent scrolling */
+  overflow-y: auto; /* Scrollable sidebar if content overflows */
   border-bottom: 3px solid #807d7d;
 
 

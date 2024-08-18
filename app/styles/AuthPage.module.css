@@ -172,6 +172,38 @@
     cursor: not-allowed;
 }
 
+.resetPassBTN {
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    font-family: 'Roboto', sans-serif;
+    text-transform: uppercase;
+    margin-top: -0.5rem;
+    /* Centering button */
+    margin-left: 9rem;
+}
+
+.resetPassBTN:hover {
+    background-color: #ff4757;
+    transform: translateY(-2px);
+}
+
+.resetPassBTN:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.5);
+}
+
+.resetPassBTN:disabled {
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+}
+
 /* Login link */
 .loginLink {
     margin-top: 1rem;
@@ -244,6 +276,18 @@
     /* Color of the text to indicate validity */
 }
 
+.success {
+    color: #2e7d32; /* Green color for success */
+    background-color: #e8f5e9; /* Light green background */
+    border: 1px solid #2e7d32; /* Border color */
+    border-radius: 4px; /* Rounded corners */
+    padding: 12px; /* Padding inside the message */
+    margin-top: 16px; /* Space above the message */
+    text-align: left; /* Center the text */
+    font-size: 16px; /* Increase font size for better readability */
+    font-weight: 500; /* Slightly bold text */
+  }
+
 
 .error {
     color: #ff6b6b;
@@ -252,6 +296,10 @@
     margin-left: 2rem;
     font-size: 0.875rem;
     /* Slightly smaller font size for error messages */
+}
+
+.forgotPasswordLink {
+    margin-top: 7px;
 }
 
 /* Add a specific class for password inputs */
