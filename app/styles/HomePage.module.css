@@ -1,10 +1,8 @@
 /* Global Container */
 .container {
-    margin: 0;
-    padding: 0;
     font-family: Arial, sans-serif;
-    background-color: #000;
-    color: #fff;
+    background-color: #333;
+    color: #000000;
     height: 100%;
     width: 100%;
     overflow-x: hidden;
@@ -15,13 +13,13 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
+    padding: -25px -50px;;
     background-color: #333;
     position: fixed;
-    top: 0;
-    left: 0;
+    margin-top: -25px;
     width: 100%;
     z-index: 1000;
+    margin-bottom: -30px;
     box-sizing: border-box;
 }
 
@@ -29,11 +27,18 @@
     display: flex;
     align-items: center;
     cursor: pointer;
+    font-size: 4rem;
+    font-weight: normal; /* Normal weight for "Welcome to" */
+    color: #ffffff;
+    margin-bottom: -3rem;
+    font-family: 'Roboto', sans-serif;
+
 }
 
 .logo {
     height: 40px;
-    margin-right: 10px;
+    margin-left: 15px;
+    margin-bottom: -30px;
     transition: opacity 0.3s;
 }
 
@@ -42,6 +47,7 @@
     font-weight: normal;
     color: #fff;
     transition: opacity 0.3s;
+    margin-top: 45px;
 }
 
 .headerLeft:hover .logo,
@@ -59,6 +65,7 @@
     outline: none;
     transition: width 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
     text-align: left;
+    margin-bottom: -65px;
 }
 
 .searchBar::placeholder {
@@ -87,6 +94,7 @@
     justify-content: center;
     align-items: center;
     font-size: 1.5rem;
+    margin-bottom: -55px;
 }
 
 .notificationIcon:hover {
@@ -100,12 +108,42 @@
     border-radius: 50%;
     cursor: pointer;
     transition: background-color 0.3s, opacity 0.3s;
+    margin-bottom: -60px
 }
 
 .profilePicture:hover {
     background-color: #444;
     opacity: 0.9;
 }
+
+
+.profilePicturePost {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s, opacity 0.3s;
+}
+
+.profilePicturePost:hover {
+    background-color: #444;
+    opacity: 0.9;
+}
+
+.profilePictureSideBar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s, opacity 0.3s;
+}
+
+.profilePictureSideBar:hover {
+    background-color: #444;
+    opacity: 0.9;
+}
+
+
 
 /* Sidebar */
 .sidebar {
@@ -118,6 +156,7 @@
     padding-top: 70px;
     z-index: 900;
     box-sizing: border-box;
+    border-right: 3px solid #807d7d;
 }
 
 .sidebarItem {
@@ -144,7 +183,7 @@
 
 /* Post Button */
 .postButton {
-    background-color: #1e90ff;
+    background-color: #e02909;
     color: #fff;
     padding: 10px;
     border: none;
@@ -159,7 +198,7 @@
 }
 
 .postButton:hover {
-    background-color: #1c86ee;
+    background-color: #e02909;
     width: 90%;
 }
 
@@ -220,6 +259,29 @@
     resize: none;
 }
 
+.textarea {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 20px;
+    border-radius: 10px;
+    width: 100%;
+    height: 200px;
+    resize: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    line-height: 1.5; /* Adjust based on font size */
+}
+
+.textarea::placeholder {
+    color: #888;
+    text-align: left; /* Center horizontally */
+    align-self: left; /* Center vertically */
+}
+
+
 .modalFooter {
     display: flex;
     justify-content: space-between;
@@ -229,6 +291,8 @@
 
 .characterCounter {
     color: #888;
+    margin-left: 16.5rem;
+    margin-bottom: -5px;
 }
 
 .submitButton {
@@ -244,4 +308,57 @@
 
 .submitButton:hover {
     background-color: #1c86ee;
+}
+
+
+/* Image Upload Icon */
+.imageUpload {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.imageIcon {
+    font-size: 1.5rem;
+    color: #888;
+    transition: color 0.3s;
+    margin-left: 1px;
+}
+.imageIcon:hover {
+    color: #fff;
+}
+
+/* Image Preview */
+.imagePreview {
+    position: relative;
+    margin-top: 10px;
+}
+
+.previewImage {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+/* Remove Image Button */
+.removeImageButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 5px;
+    transition: background-color 0.3s;
+}
+
+.removeImageButton:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.removeImageButton svg {
+    color: #fff;
+    font-size: 1.2rem;
 }
